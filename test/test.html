@@ -1,0 +1,20 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>RUNNING</title>
+<pre id="out"></pre>
+<script src="../app.js"></script>
+<script>
+  (async () => {
+    try {
+      const params = new URLSearchParams(location.search);
+      const file = params.get('file') || 'fixture.docx';
+      const buffer = await (await fetch(file)).arrayBuffer();
+      const markdown = params.has('pdf') ? await pdfToMarkdown(buffer) : await docxToMarkdown(buffer);
+      document.getElementById('out').textContent = markdown;
+      document.title = 'DONE';
+    } catch (error) {
+      document.getElementById('out').textContent = 'ERROR: ' + (error && error.stack || error);
+      document.title = 'DONE';
+    }
+  })();
+</script>
